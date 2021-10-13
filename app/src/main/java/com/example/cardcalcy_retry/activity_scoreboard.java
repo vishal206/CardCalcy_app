@@ -27,6 +27,7 @@ public class activity_scoreboard extends AppCompatActivity {
     private scoreboardAdapter adapter;
     private TextView txt_playername,txt_playerscore,txt_nowin,txt_noscoot,txt_nohalf;
     private EditText txt_value;
+    private Boolean clickedWin=false,clickedScoot=false,clickedHscoot=false,clickedScore=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +69,22 @@ public class activity_scoreboard extends AppCompatActivity {
                 txt_nowin.setText(pl.getPlayer_win(position).toString());
                 txt_noscoot.setText(pl.getPlayer_scoot(position).toString());
                 txt_nohalf.setText(pl.getPlayer_half(position).toString());
-
+                clickedWin=false;
+                clickedScoot=false;
+                clickedHscoot=false;
+                clickedScore=false;
                 btn_win.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int w=Integer.parseInt(txt_nowin.getText().toString());
-                        w++;
+                        if(clickedWin==true){
+                            w--;
+                            clickedWin=false;
+                        }
+                        else{
+                            w++;
+                            clickedWin=true;
+                        }
                         txt_nowin.setText(""+w);
                         pl.modify_win(position,w);
                     }
@@ -82,11 +93,19 @@ public class activity_scoreboard extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         int w=Integer.parseInt(txt_noscoot.getText().toString());
-                        w++;
+                        int s=Integer.parseInt(txt_playerscore.getText().toString());
+                        if(clickedScoot==true){
+                            w--;
+                            s=s-20;
+                            clickedScoot=false;
+                        }
+                        else{
+                            w++;
+                            s=s+20;
+                            clickedScoot=true;
+                        }
                         txt_noscoot.setText(""+w);
                         pl.modify_scoot(position,w);
-                        int s=Integer.parseInt(txt_playerscore.getText().toString());
-                        s=s+20;
                         pl.modify_score(position,s);
                         txt_playerscore.setText(""+s);
                     }
@@ -95,13 +114,22 @@ public class activity_scoreboard extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         int w=Integer.parseInt(txt_nohalf.getText().toString());
-                        w++;
+                        int s=Integer.parseInt(txt_playerscore.getText().toString());
+                        if(clickedHscoot==true){
+                            w--;
+                            s=s-40;
+                            clickedHscoot=false;
+                        }
+                        else{
+                            w++;
+                            s=s+40;
+                            clickedHscoot=true;
+                        }
                         txt_nohalf.setText(""+w);
                         pl.modify_half(position,w);
-                        int s=Integer.parseInt(txt_playerscore.getText().toString());
-                        s=s+40;
                         pl.modify_score(position,s);
                         txt_playerscore.setText(""+s);
+
                     }
                 });
 
@@ -112,7 +140,14 @@ public class activity_scoreboard extends AppCompatActivity {
                         inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
                         int w=Integer.parseInt(txt_value.getText().toString());
                         int s=Integer.parseInt(txt_playerscore.getText().toString());
-                        s=s+w;
+                        if(clickedScore==true){
+                            s=s-w;
+                            clickedScore=false;
+                        }
+                        else{
+                            s=s+w;
+                            clickedScore=true;
+                        }
                         pl.modify_score(position,s);
                         txt_playerscore.setText(""+s);
                         txt_value.setText("");
